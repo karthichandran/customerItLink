@@ -1,0 +1,134 @@
+<div id="user" class="page-layout carded fullwidth inner-scroll">
+
+  <!-- TOP BACKGROUND -->
+  <div class="top-bg accent"></div>
+  <!-- / TOP BACKGROUND -->
+  <!-- CENTER -->
+  <div class="center">
+
+    <!-- HEADER -->
+    <div class="header accent" fxLayout="row" fxLayoutAlign="space-between center">
+
+      <!-- APP TITLE -->
+      <div fxLayout="row" fxLayoutAlign="start center">
+        <div class="logo">
+          <img class="logo-icon" src="assets/images/logos/repro_logo.png" style="height:50px;width:50px;">
+        </div>
+        <div fxLayout="column" fxLayoutAlign="start start" [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+          <div class="h2">
+            <span style="font-weight: 800;padding-left: 15px;">REpro Services</span>
+          </div>
+
+        </div>
+
+      </div>
+      <!-- / APP TITLE -->
+
+    </div>
+    <!-- / HEADER -->
+    <!-- CONTENT CARD -->
+    <div class="content-card">
+      <div class="content p-24">
+
+        <div fusePerfectScrollbar>
+          <div fxLayout="column">
+           
+            <div fxFlex style="margin: 20px 0 5px 10px">
+              <label>We wish to inform you that, with effect from 1st April 2023, the Income tax department has mandated all banks to migrate to their new portal and this has a bearing on the TDS payments which we were doing U/s. 194IA on your behalf.</label>
+            </div>
+            <div fxFlex style="margin:5px 0 15px 10px">
+              <label>The key change impacting us is that now the Form 26QB can be filled only after logging into the Income tax portal account of every buyer. <b>To continue managing your TDS compliance, we will need your Income tax Login password.</b> If you have booked the unit with a co-applicant, the Login password is required for co-applicants as well.</label>
+            </div>
+            <div fxFlex style="margin:5px 0 15px 10px">
+              <label>If you want us to continue with the TDS Compliance from our end, please fill in the password against each PAN and submit this form.</label>
+            </div>
+            <div fxFlex style="margin:5px 0 15px 10px">
+              <label>If you intend not to share the password and handle the TDS compliance U/s. 194IA at your end, please Opt out by selecting the option provided below.</label>
+            </div>
+            <div fxFlex style="margin:5px 0 15px 10px">
+              <label>For any clarifications, please write an Email to<b> support@reproservices.in</b></label>
+            </div>
+          </div>
+          <!-- VERTICAL STEPPER EXAMPLE -->
+          <form fxLayout="column" [formGroup]="propertyForm">
+            <!-- <div class="h2 mb-24 section-title">Property Details</div> -->
+            <div fxFlex="1 0 auto" fxLayout="row wrap" style="margin-top: 40px;">
+              <mat-form-field appearance="outline" fxFlex>
+                <mat-label>Declaration Date</mat-label>
+                <input #declaration matInput [matDatepicker]="declarationDate" formControlName="declarationDate"
+                  required>
+                <mat-datepicker-toggle matSuffix [for]="declarationDate"></mat-datepicker-toggle>
+                <mat-datepicker #declarationDate></mat-datepicker>
+                <mat-error>Declaration Date is required!</mat-error>
+              </mat-form-field>
+              <div fxLayout="column" fxFlex>
+               
+                <mat-form-field class="selection-fix" appearance="outline" fxFlex>
+                  <mat-label>Select the project</mat-label>
+                  <mat-select formControlName="propertyID" required #PropertyFilterSelect (selectionChange)="getUnits()">
+                    <mat-option>
+                      <ngx-mat-select-search [formControl]="propertyFilterCtrl" placeholderLabel="Search">
+                      </ngx-mat-select-search>
+                    </mat-option>
+                    <mat-option *ngFor="let option of filteredProperty| async" [value]="option.propertyID">
+                      {{option.addressPremises}}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error>Property is required!</mat-error>
+                </mat-form-field>
+              </div>
+              <div fxLayout="column" fxFlex>
+                <mat-form-field class="selection-fix" appearance="outline" fxFlex>
+                  <mat-label>Select the Unit No</mat-label>
+                  <mat-select formControlName="unitNo" required #UnitNoFilterSelect (selectionChange)="getCustomers()">
+                    <mat-option>
+                      <ngx-mat-select-search [formControl]="unitNoFilterCtrl" placeholderLabel="Search">
+                      </ngx-mat-select-search>
+                    </mat-option>
+                    <mat-option *ngFor="let option of filteredUnitNo| async" [value]="option.unitNo">
+                      {{option.unitNo}}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error>Unit No is required!</mat-error>
+                </mat-form-field>
+              </div>
+              <!-- <mat-form-field appearance="outline" fxFlex>
+                <mat-label>Unit No</mat-label>
+                <input matInput type="number" maxlength="10" formControlName="unitNo" required>
+                <mat-error>Unit No is required!</mat-error>
+              </mat-form-field> -->
+            </div>
+          </form>    
+
+          <div fxLayout="row wrap">           
+            <div fxFlex>          
+              <div fxLayout="column" style="padding:5px 0;" [@animateStagger]="{value:'50'}">          
+                <grid [dataSet]="customerData" [rowSelection]="'undefined'" [gridColDef]="customerColumnDef"></grid>
+              </div>          
+            </div>
+            
+          </div>
+          <div fxLayout="row wrap">
+            <div fxFlex>
+              <div style="margin:40px 0 0 20px;">
+                <mat-checkbox [(ngModel)]="isOptedOut"  > <span style="margin-left: 20px;font-size: large;"> I do not want to share Income tax password, I will manage TDS compliance on my own.</span></mat-checkbox>
+              </div>
+            </div>
+                
+          
+          </div>
+            <div fxLayout="row" fxLayoutAlign="center center" style="margin-top: 75px;">
+             
+              <button class="mr-8" mat-raised-button type="submit" (click)="saveCustomer()" color="accent">
+                Save
+              </button>
+            
+            </div>
+        </div>
+      </div>
+      <!-- / CONTENT CARD -->
+
+    </div>
+    <!-- / CENTER -->
+  </div>
+</div>
