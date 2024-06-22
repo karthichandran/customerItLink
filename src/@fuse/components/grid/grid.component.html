@@ -75,7 +75,7 @@
           <input autofocus matInput class="grid-textbox"
                  (blur)="updateValue($event.target, column.field, rowIndex)"
                  *ngIf="editing[rowIndex + column.field]"
-                 type="text"
+                 type="password"
                  [value]="value" />
         </div>
         <div *ngIf="column.type=='selection'">
