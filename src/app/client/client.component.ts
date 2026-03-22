@@ -99,8 +99,8 @@ export class ClientComponent implements OnInit, OnDestroy {
   }
   
   saveCustomer(): void {
-    var isOpt=this.isOptedOut;
-    var isValid=true;
+    var isOpt = this.isOptedOut;
+    var isValid = true;
     if (!isOpt) {
       _.forEach(this.customerData, obj => {
         if (obj.incomeTaxPassword == undefined || obj.incomeTaxPassword == "" || obj.incomeTaxPassword == null)
@@ -109,23 +109,24 @@ export class ClientComponent implements OnInit, OnDestroy {
       );
     }
 
-    if(!isValid){
-    this.toastr.error(" Please fill the Password or select Opt out option to submit");
-  return;
-  }
-     var vm = this.clients;
-     vm.customers=this.customerData;
-     vm.isOptedOut=this.isOptedOut;
-     vm.asOfDate= moment(this.propertyForm.value.declarationDate).local().format("YYYY-MM-DD");
-    this.clientService.saveCustomer(vm).subscribe((res) => {
-      this.toastr.success("Thanks for your update. We will do the needful accordingly.");   
-      this.clients=[];
-      this.customerData=[];
-      this.isOptedOut=false;  
+    if (!isValid) {
+      this.toastr.error(" Please fill the Password or select Opt out option to submit");
+      return;
+    }
+    var vm = this.clients;
+    vm.customers = this.customerData;
+    vm.isOptedOut = this.isOptedOut;
+    vm.asOfDate = moment(this.propertyForm.value.declarationDate).local().format("YYYY-MM-DD");
+    let tenant = this.getselectedproperty().tenant;
+    this.clientService.saveCustomer(vm, tenant).subscribe((res) => {
+      this.toastr.success("Thanks for your update. We will do the needful accordingly.");
+      this.clients = [];
+      this.customerData = [];
+      this.isOptedOut = false;
       this.propertyForm.reset();
       this.propertyForm.get('declarationDate').setValue(moment().format("YYYY-MM-DD"));
     }, (e) => {
-        this.toastr.error(e.error.error);
+      this.toastr.error(e.error.error);
     });
   }
 
@@ -134,10 +135,17 @@ export class ClientComponent implements OnInit, OnDestroy {
     return (param != "" && param != null && param!=undefined)
   }
 
+  getselectedproperty(){
+    let propertyId = this.propertyForm.value.propertyID;
+    let selectedProp= _.find(this.propertyList, function(o) { return o.propertyID == propertyId; });
+    return selectedProp;
+  }
+
   getUnits() {
     let propertyId = this.propertyForm.value.propertyID;
-    this.clientService.getUnitNo(propertyId).subscribe((response) => {
-      this.unitNoList = response;
+    let tenant = this.getselectedproperty().tenant;
+    this.clientService.getUnitNo(propertyId, tenant).subscribe((response) => {
+      this.unitNoList = response.data;
       this.filteredUnitNo.next(this.unitNoList.slice());
     });
   }
@@ -145,17 +153,20 @@ export class ClientComponent implements OnInit, OnDestroy {
   getCustomers(){
     let unitNo = this.propertyForm.value.unitNo;
      let propertyId = this.propertyForm.value.propertyID;
-    this.clientService.getCustomerByUnitNo(propertyId,unitNo).subscribe((response) => {
+     let tenant = this.getselectedproperty().tenant;
+    this.clientService.getCustomerByUnitNo(propertyId,unitNo, tenant).subscribe((response) => {
 
-      this.clients = response;
-      this.customerData=response.customers;
+      this.clients = response.data;
+      this.customerData=response.data.customers;
     });
   }
  
   getAllProperties() {
     this.clientService.getPropertyList().subscribe((response) => {
-      this.propertyList = _.filter(response, o => { return o.isActive == null || o.isActive == true; });
+      this.propertyList = response.data;
       this.filteredProperty.next(this.propertyList.slice());
+      // this.propertyList = _.filter(response, o => { return o.isActive == null || o.isActive == true; });
+      // this.filteredProperty.next(this.propertyList.slice());
     });
   }
 

@@ -25,22 +25,36 @@ export class ClientService {
    * @returns {Observable<any>} Provisioning entry.
    */
 
-getUnitNo(id:number):Observable<any> {
-  return this.http.get(`/customerTaxLogin/${id}`);
-}
+  // getUnitNo(id:number):Observable<any> {
+  //   return this.http.get(`/customerTaxLogin/${id}`);
+  // }
 
-getCustomerByUnitNo(propertyId:number, id:number): Observable<any> {
-    return this.http.get(`/customerTaxLogin/customersByUnit/${propertyId}/${id}`);
+  // getCustomerByUnitNo(propertyId:number, id:number): Observable<any> {
+  //     return this.http.get(`/customerTaxLogin/customersByUnit/${propertyId}/${id}`);
+  //   }
+
+  // saveCustomer(customer: any): Observable<any> {
+  //       return this.http.post('/customerTaxLogin',  customer );
+  //   }
+
+  // getPropertyList(): Observable<any> {
+  //   return this.http.get(`/property/dropdown`);
+  // }
+  
+  getUnitNo(id: number,tenant:string): Observable<any> {
+    return this.http.get(`/externalcustomertaxlogin/${id}/${tenant}`);
   }
 
-saveCustomer(customer: any): Observable<any> {
-      return this.http.post('/customerTaxLogin',  customer );
+  getCustomerByUnitNo(propertyId: number, id: number, tenant: string): Observable<any> {
+    return this.http.get(`/externalcustomertaxlogin/customers-by-unit/${propertyId}/${id}/${tenant}`);
+  }
+
+  saveCustomer(customer: any, tenant: string): Observable<any> {
+    return this.http.post(`/externalcustomertaxlogin/${tenant}`, customer);
   }
   getPropertyList(): Observable<any> {
-    return this.http.get(`/property/dropdown`);
-  }
-
-  
+    return this.http.get(`/externalProspect/properties`);
+  } 
   
  
 }
